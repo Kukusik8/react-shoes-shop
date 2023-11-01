@@ -1,23 +1,31 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import ContentLoader from "react-content-loader";
-
 import styles from "./Card.module.scss";
+import AppContext from "../../context";
 
 console.log(styles);
 
-function Card({ id,onPlus,onFavorite, title, imageUrl, price,favorited=false,added=false,loading=false}) {
-  const [isAdded, setIsAdded] = useState(added);
+function Card({
+  id,
+  onPlus,
+  onFavorite,
+  title,
+  imageUrl,
+  price,
+  favorited = false,
+  loading = false,
+}) {
+  const { isItemAdded } = useContext(AppContext);
   const [isFavorite, setIsFavorire] = useState(favorited);
 
   const onClickPlus = () => {
-    onPlus({id,title,imageUrl,price});
-    setIsAdded(!isAdded);
+    onPlus({ id, title, imageUrl, price });
   };
 
   const onClickFavorite = () => {
     onFavorite({ title, imageUrl, price });
-    setIsFavorire(!isFavorite)
-  }
+    setIsFavorire(!isFavorite);
+  };
 
   return (
     <div className={styles.card}>
@@ -47,7 +55,7 @@ function Card({ id,onPlus,onFavorite, title, imageUrl, price,favorited=false,add
               alt="red heart"
             />
           </div>
-          <img width='100%' height={135} src={imageUrl} alt="shoe" />
+          <img width="100%" height={135} src={imageUrl} alt="shoe" />
           <h5>{title}</h5>
           <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column ">
@@ -57,7 +65,11 @@ function Card({ id,onPlus,onFavorite, title, imageUrl, price,favorited=false,add
             <img
               className={styles.plus}
               onClick={onClickPlus}
-              src={isAdded ? "/img/button-checked.svg" : "/img/button-plus.svg"}
+              src={
+                isItemAdded(id)
+                  ? "/img/button-checked.svg"
+                  : "/img/button-plus.svg"
+              }
               alt="plus"
             />
           </div>
